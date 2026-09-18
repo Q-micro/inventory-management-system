@@ -1,0 +1,921 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item - My Store</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.25);
+        }
+
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+
+        .edit-card {
+            max-width: 720px;
+            margin: auto;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            background: var(--card-bg);
+        }
+
+
+        .item-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #e2e8f0;
+        }
+
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: #fff;
+        }
+
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-shop"></i> My Store
+        </a>
+        <a href="/" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to Inventory
+        </a>
+    </div>
+</nav>
+
+
+<div class="container py-5">
+
+
+    <div class="card edit-card">
+        <div class="card-body p-4">
+            <h2 class="mb-4 fw-bold">
+                Edit Item
+            </h2>
+
+
+            {% if item['image_path'] %}
+            <img
+                src="{{ url_for('static', filename='uploads/' + item['image_path']) }}"
+                class="item-image mb-4"
+                alt="{{ item['name'] }}">
+            {% else %}
+            <div class="item-image mb-4 d-flex align-items-center justify-content-center text-muted">
+                <i class="bi bi-image" style="font-size: 3rem;"></i>
+            </div>
+            {% endif %}
+
+
+            <form action="/update/{{ item['id'] }}" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Item Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        value="{{ item['name'] }}"
+                        required>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label">Price (BHD)</label>
+                    <input
+                        type="number"
+                        step="0.001"
+                        name="price"
+                        class="form-control"
+                        value="{{ item['price'] }}"
+                        required>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label">Quantity</label>
+                    <input
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        class="form-control"
+                        value="{{ item['quantity'] or 0 }}"
+                        required>
+                </div>
+
+
+                <div class="mb-3">
+    <label class="form-label">Size</label>
+
+
+    <select name="size" class="form-select" id="sizeSelect">
+        <option value="">Select Size</option>
+
+
+        <option value="XXS" {% if item['size'] == 'XXS' %}selected{% endif %}>XXS</option>
+        <option value="XS" {% if item['size'] == 'XS' %}selected{% endif %}>XS</option>
+        <option value="S" {% if item['size'] == 'S' %}selected{% endif %}>S</option>
+        <option value="M" {% if item['size'] == 'M' %}selected{% endif %}>M</option>
+        <option value="L" {% if item['size'] == 'L' %}selected{% endif %}>L</option>
+        <option value="XL" {% if item['size'] == 'XL' %}selected{% endif %}>XL</option>
+        <option value="XXL" {% if item['size'] == 'XXL' %}selected{% endif %}>XXL</option>
+
+
+        <option value="OTHER">Other</option>
+    </select>
+
+<div class="mb-3">
+    <label class="form-label">Category</label>
+
+    <select name="category" class="form-select">
+
+        <option value="Dress" {% if item['category']=="Dress" %}selected{% endif %}>Dress</option>
+        <option value="Jacket" {% if item['category']=="Jacket" %}selected{% endif %}>Jacket</option>
+        <option value="Hoodie" {% if item['category']=="Hoodie" %}selected{% endif %}>Hoodie</option>
+        <option value="Sweater" {% if item['category']=="Sweater" %}selected{% endif %}>Sweater</option>
+        <option value="T-Shirt" {% if item['category']=="T-Shirt" %}selected{% endif %}>T-Shirt</option>
+        <option value="Shirt" {% if item['category']=="Shirt" %}selected{% endif %}>Shirt</option>
+        <option value="Jeans" {% if item['category']=="Jeans" %}selected{% endif %}>Jeans</option>
+        <option value="Pants" {% if item['category']=="Pants" %}selected{% endif %}>Pants</option>
+        <option value="Skirt" {% if item['category']=="Skirt" %}selected{% endif %}>Skirt</option>
+        <option value="Shorts" {% if item['category']=="Shorts" %}selected{% endif %}>Shorts</option>
+
+        <option value="Sneakers" {% if item['category']=="Sneakers" %}selected{% endif %}>Sneakers</option>
+        <option value="Boots" {% if item['category']=="Boots" %}selected{% endif %}>Boots</option>
+        <option value="Handbag" {% if item['category']=="Handbag" %}selected{% endif %}>Handbag</option>
+        <option value="Backpack" {% if item['category']=="Backpack" %}selected{% endif %}>Backpack</option>
+        <option value="Book" {% if item['category']=="Book" %}selected{% endif %}>Book</option>
+        <option value="Beauty" {% if item['category']=="Beauty" %}selected{% endif %}>Beauty</option>
+        <option value="Electronics" {% if item['category']=="Electronics" %}selected{% endif %}>Electronics</option>
+        <option value="Other" {% if item['category']=="Other" %}selected{% endif %}>Other</option>
+
+    </select>
+</div>
+
+    <input
+        type="text"
+        name="custom_size"
+        id="customSize"
+        class="form-control mt-2"
+        value="{{ item['size'] }}"
+        placeholder="Custom size">
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Category</label>
+
+    <select name="category" class="form-select">
+        <option value="Dresses" {% if item["category"]=="Dresses" %}selected{% endif %}>Dresses</option>
+        <option value="Jackets" {% if item["category"]=="Jackets" %}selected{% endif %}>Jackets</option>
+        <option value="Shirts" {% if item["category"]=="Shirts" %}selected{% endif %}>Shirts</option>
+        <option value="Pants" {% if item["category"]=="Pants" %}selected{% endif %}>Pants</option>
+        <option value="Skirts" {% if item["category"]=="Skirts" %}selected{% endif %}>Skirts</option>
+        <option value="Shoes" {% if item["category"]=="Shoes" %}selected{% endif %}>Shoes</option>
+        <option value="Bags" {% if item["category"]=="Bags" %}selected{% endif %}>Bags</option>
+        <option value="Accessories" {% if item["category"]=="Accessories" %}selected{% endif %}>Accessories</option>
+        <option value="Books" {% if item["category"]=="Books" %}selected{% endif %}>Books</option>
+        <option value="Beauty" {% if item["category"]=="Beauty" %}selected{% endif %}>Beauty</option>
+        <option value="Other" {% if item["category"]=="Other" %}selected{% endif %}>Other</option>
+    </select>
+</div>
+                <div class="mb-3">
+                    <label class="form-label">Condition</label>
+                    <select
+                        name="condition"
+                        class="form-select"
+                        required>
+                        <option value="Brand New" {% if item['item_condition'] == 'Brand New' %}selected{% endif %}>Brand New</option>
+                        <option value="Like New" {% if item['item_condition'] == 'Like New' %}selected{% endif %}>Like New</option>
+                        <option value="Excellent" {% if item['item_condition'] == 'Excellent' %}selected{% endif %}>Excellent</option>
+                        <option value="Good" {% if item['item_condition'] == 'Good' %}selected{% endif %}>Good</option>
+                        <option value="Fair" {% if item['item_condition'] == 'Fair' %}selected{% endif %}>Fair</option>
+                        <option value="Needs Repair" {% if item['item_condition'] == 'Needs Repair' %}selected{% endif %}>Needs Repair</option>
+                    </select>
+                </div>
+
+
+                <div class="mb-4">
+                    <label class="form-label">Description</label>
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="4">{{ item['description'] or "" }}</textarea>
+                </div>
+
+
+                <div class="d-flex gap-2">
+                    <button
+                        type="submit"
+                        class="btn btn-primary-custom">
+                        <i class="bi bi-check-circle"></i> Save Changes
+                    </button>
+                    <a
+                        href="/"
+                        class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item - My Store</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='y2k.css') }}?v=4"
+>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.25);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .edit-card {
+            max-width: 720px;
+            margin: auto;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            background: var(--card-bg);
+        }
+
+        .image-editor {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #e2e8f0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-editor .item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: 50% 50%;
+    border-radius: 12px;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: grab;
+    transform: scale(1);
+    transform-origin: center center;
+}
+
+.image-editor .item-image:active {
+    cursor: grabbing;
+}
+
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.zoom-controls input {
+    flex: 1;
+}
+        .form-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            padding: 0.65rem 0.8rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: #fff;
+        }
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+        }
+
+
+.image-editor {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.image-editor .item-image {
+    cursor: grab;
+    user-select: none;
+}
+
+    </style>
+</head>
+<body class="y2k-theme">
+
+<nav class="navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+        </a>
+
+        <a href="/" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to Inventory
+        </a>
+    </div>
+</nav>
+
+<div class="container py-5">
+
+    <div class="card edit-card">
+        <div class="card-body p-4">
+
+            <h2 class="mb-4 fw-bold">
+                Edit Item
+            </h2>
+
+{% if item['image_path'] %}
+<div class="image-editor mb-4">
+    <img
+        id="editImagePreview"
+        src="{{ url_for('static', filename='uploads/' ~ item['image_path']) }}"
+        class="item-image"
+        alt="{{ item['name'] }}"
+        draggable="false">
+</div>
+{% else %}
+<div class="image-editor mb-4">
+    <div
+        id="editImagePreview"
+        class="item-image d-flex align-items-center justify-content-center text-muted">
+        <i class="bi bi-image" style="font-size: 3rem;"></i>
+    </div>
+</div>
+{% endif %}
+
+<div class="mb-4">
+
+    <label class="form-label">Change Image</label>
+
+    <input
+        type="file"
+        name="image"
+        id="editImageInput"
+        class="form-control mb-3"
+        accept="image/*">
+
+    <label class="form-label">
+        Zoom
+    </label>
+
+    <div class="zoom-controls">
+        <span>−</span>
+
+        <input
+            type="range"
+            id="zoomSlider"
+            min="1"
+            max="3"
+            step="0.05"
+            value="{{ item['image_zoom'] or 1 }}">
+
+        <span>+</span>
+
+        <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            id="resetImage">
+            Reset
+        </button>
+    </div>
+
+</div>
+
+<div class="form-section">
+    <label class="form-label">Category</label>
+
+    <select
+        name="category"
+        class="form-select"
+        id="categorySelect"
+        required>
+
+        <option value="">Select Category</option>
+
+        <optgroup label="Clothing">
+            <option value="Dresses" {% if item['category'] == 'Dresses' %}selected{% endif %}>Dresses</option>
+            <option value="Jackets" {% if item['category'] == 'Jackets' %}selected{% endif %}>Jackets</option>
+            <option value="Tops" {% if item['category'] == 'Tops' %}selected{% endif %}>Tops</option>
+            <option value="Shirts" {% if item['category'] == 'Shirts' %}selected{% endif %}>Shirts</option>
+            <option value="Pants" {% if item['category'] == 'Pants' %}selected{% endif %}>Pants</option>
+            <option value="Jeans" {% if item['category'] == 'Jeans' %}selected{% endif %}>Jeans</option>
+            <option value="Skirts" {% if item['category'] == 'Skirts' %}selected{% endif %}>Skirts</option>
+            <option value="Shorts" {% if item['category'] == 'Shorts' %}selected{% endif %}>Shorts</option>
+            <option value="Hoodies" {% if item['category'] == 'Hoodies' %}selected{% endif %}>Hoodies</option>
+            <option value="Sweaters" {% if item['category'] == 'Sweaters' %}selected{% endif %}>Sweaters</option>
+            <option value="Abayas" {% if item['category'] == 'Abayas' %}selected{% endif %}>Abayas</option>
+        </optgroup>
+
+        <optgroup label="Shoes">
+            <option value="Sneakers" {% if item['category'] == 'Sneakers' %}selected{% endif %}>Sneakers</option>
+            <option value="Boots" {% if item['category'] == 'Boots' %}selected{% endif %}>Boots</option>
+            <option value="Sandals" {% if item['category'] == 'Sandals' %}selected{% endif %}>Sandals</option>
+            <option value="Heels" {% if item['category'] == 'Heels' %}selected{% endif %}>Heels</option>
+            <option value="Flats" {% if item['category'] == 'Flats' %}selected{% endif %}>Flats</option>
+            <option value="Shoes" {% if item['category'] == 'Shoes' %}selected{% endif %}>Shoes</option>
+        </optgroup>
+
+        <optgroup label="Accessories">
+            <option value="Bags" {% if item['category'] == 'Bags' %}selected{% endif %}>Bags</option>
+            <option value="Handbag" {% if item['category'] == 'Handbag' %}selected{% endif %}>Handbag</option>
+            <option value="Backpack" {% if item['category'] == 'Backpack' %}selected{% endif %}>Backpack</option>
+            <option value="Jewelry" {% if item['category'] == 'Jewelry' %}selected{% endif %}>Jewelry</option>
+            <option value="Belts" {% if item['category'] == 'Belts' %}selected{% endif %}>Belts</option>
+            <option value="Scarves" {% if item['category'] == 'Scarves' %}selected{% endif %}>Scarves</option>
+            <option value="Hats" {% if item['category'] == 'Hats' %}selected{% endif %}>Hats</option>
+            <option value="Sunglasses" {% if item['category'] == 'Sunglasses' %}selected{% endif %}>Sunglasses</option>
+        </optgroup>
+
+        <option value="Books" {% if item['category'] == 'Books' %}selected{% endif %}>Books</option>
+        <option value="Beauty" {% if item['category'] == 'Beauty' %}selected{% endif %}>Beauty</option>
+        <option value="Electronics" {% if item['category'] == 'Electronics' %}selected{% endif %}>Electronics</option>
+        <option value="Home Decor" {% if item['category'] == 'Home Decor' %}selected{% endif %}>Home Decor</option>
+
+        {% for category in categories %}
+            {% if category not in [
+                'Dresses',
+                'Jackets',
+                'Tops',
+                'Shirts',
+                'Pants',
+                'Jeans',
+                'Skirts',
+                'Shorts',
+                'Hoodies',
+                'Sweaters',
+                'Abayas',
+                'Sneakers',
+                'Boots',
+                'Sandals',
+                'Heels',
+                'Flats',
+                'Shoes',
+                'Bags',
+                'Handbag',
+                'Backpack',
+                'Jewelry',
+                'Belts',
+                'Scarves',
+                'Hats',
+                'Sunglasses',
+                'Books',
+                'Beauty',
+                'Electronics',
+                'Home Decor'
+            ] %}
+                <option value="{{ category }}"
+                    {% if item['category'] == category %}selected{% endif %}>
+                    {{ category }}
+                </option>
+            {% endif %}
+        {% endfor %}
+
+        <option value="OTHER">Other</option>
+
+    </select>
+
+    <input
+        type="text"
+        name="custom_category"
+        id="customCategory"
+        class="form-control mt-2"
+        placeholder="Enter your category"
+        style="display: none;">
+</div>
+
+                <div class="form-section">
+                    <label class="form-label">Condition</label>
+
+                    <select
+                        name="condition"
+                        class="form-select"
+                        required>
+                        <option value="Brand New" {% if item['item_condition'] == 'Brand New' %}selected{% endif %}>Brand New</option>
+                        <option value="Like New" {% if item['item_condition'] == 'Like New' %}selected{% endif %}>Like New</option>
+                        <option value="Excellent" {% if item['item_condition'] == 'Excellent' %}selected{% endif %}>Excellent</option>
+                        <option value="Good" {% if item['item_condition'] == 'Good' %}selected{% endif %}>Good</option>
+                        <option value="Fair" {% if item['item_condition'] == 'Fair' %}selected{% endif %}>Fair</option>
+                        <option value="Needs Repair" {% if item['item_condition'] == 'Needs Repair' %}selected{% endif %}>Needs Repair</option>
+                    </select>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">Description</label>
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="4">{{ item['description'] or '' }}</textarea>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button
+                        type="submit"
+                        class="btn btn-primary-custom">
+                        <i class="bi bi-check-circle"></i> Save Changes
+                    </button>
+
+                    <a
+                        href="/"
+                        class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const sizeSelect = document.getElementById("sizeSelect");
+const customSize = document.getElementById("customSize");
+
+sizeSelect.addEventListener("change", function () {
+    if (this.value === "OTHER") {
+        customSize.style.display = "block";
+        customSize.focus();
+    } else {
+        customSize.style.display = "none";
+        customSize.value = "";
+    }
+});
+
+
+
+
+</script>
+<script>
+const categorySelect = document.getElementById("categorySelect");
+const customCategory = document.getElementById("customCategory");
+
+if (categorySelect && customCategory) {
+
+    categorySelect.addEventListener("change", function () {
+
+        if (this.value === "OTHER") {
+            customCategory.style.display = "block";
+            customCategory.required = true;
+            customCategory.focus();
+        } else {
+            customCategory.style.display = "none";
+            customCategory.required = false;
+            customCategory.value = "";
+        }
+
+    });
+
+    // If the existing item already has a custom category,
+    // show it when opening the edit page.
+    const standardCategories = [
+        "Dresses",
+        "Jackets",
+        "Tops",
+        "Shirts",
+        "Pants",
+        "Jeans",
+        "Skirts",
+        "Shorts",
+        "Hoodies",
+        "Sweaters",
+        "Abayas",
+        "Sneakers",
+        "Boots",
+        "Sandals",
+        "Heels",
+        "Flats",
+        "Shoes",
+        "Bags",
+        "Handbag",
+        "Backpack",
+        "Jewelry",
+        "Belts",
+        "Scarves",
+        "Hats",
+        "Sunglasses",
+        "Books",
+        "Beauty",
+        "Electronics",
+        "Home Decor"
+    ];
+
+    const currentCategory = "{{ item['category'] or '' }}";
+
+    if (
+        currentCategory !== "" &&
+        !standardCategories.includes(currentCategory)
+    ) {
+        categorySelect.value = "OTHER";
+        customCategory.value = currentCategory;
+        customCategory.style.display = "block";
+        customCategory.required = true;
+    }
+}
+</script>
+
+</body>
+
+<script>
+
+const editImageInput = document.getElementById("editImageInput");
+const editImagePreview = document.getElementById("editImagePreview");
+const imagePosition = document.getElementById("imagePosition");
+const zoomSlider = document.getElementById("zoomSlider");
+const imageZoom = document.getElementById("imageZoom");
+const resetImage = document.getElementById("resetImage");
+
+if (
+    editImageInput &&
+    editImagePreview &&
+    imagePosition &&
+    zoomSlider &&
+    imageZoom
+) {
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    // -------------------------
+    // Apply saved settings
+    // -------------------------
+
+    function applyImageSettings() {
+
+        if (editImagePreview.tagName !== "IMG") {
+            return;
+        }
+
+        const zoom = parseFloat(imageZoom.value) || 1;
+
+        editImagePreview.style.objectPosition =
+            imagePosition.value || "50% 50%";
+
+        editImagePreview.style.transform =
+            `scale(${zoom})`;
+    }
+
+    applyImageSettings();
+
+
+    // -------------------------
+    // Zoom slider
+    // -------------------------
+
+    zoomSlider.addEventListener("input", function () {
+
+        const zoom = parseFloat(this.value);
+
+        imageZoom.value = zoom;
+
+        applyImageSettings();
+
+    });
+
+
+    // -------------------------
+    // New image selected
+    // -------------------------
+
+    editImageInput.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+
+            if (editImagePreview.tagName === "IMG") {
+
+                editImagePreview.src = event.target.result;
+
+            } else {
+
+                const img = document.createElement("img");
+
+                img.id = "editImagePreview";
+                img.className = "item-image";
+                img.alt = "Preview";
+                img.draggable = false;
+
+                editImagePreview.parentElement.replaceChild(
+                    img,
+                    editImagePreview
+                );
+
+            }
+
+            const newPreview =
+                document.getElementById("editImagePreview");
+
+            newPreview.src = event.target.result;
+
+            imagePosition.value = "50% 50%";
+
+            imageZoom.value = "1";
+
+            zoomSlider.value = "1";
+
+            newPreview.style.objectPosition = "50% 50%";
+            newPreview.style.transform = "scale(1)";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+
+    // -------------------------
+    // Drag image
+    // -------------------------
+
+    editImagePreview.addEventListener("mousedown", function (event) {
+
+        if (editImagePreview.tagName !== "IMG") {
+            return;
+        }
+
+        isDragging = true;
+
+        startX = event.clientX;
+        startY = event.clientY;
+
+        editImagePreview.style.cursor = "grabbing";
+
+        event.preventDefault();
+
+    });
+
+
+    document.addEventListener("mousemove", function (event) {
+
+        if (!isDragging) {
+            return;
+        }
+
+        const moveX = event.clientX - startX;
+        const moveY = event.clientY - startY;
+
+        let parts =
+            (imagePosition.value || "50% 50%").split(" ");
+
+        let x = parseFloat(parts[0]) || 50;
+        let y = parseFloat(parts[1]) || 50;
+
+        x += moveX * 0.25;
+        y += moveY * 0.25;
+
+        x = Math.max(0, Math.min(100, x));
+        y = Math.max(0, Math.min(100, y));
+
+        const newPosition =
+            `${x}% ${y}%`;
+
+        imagePosition.value = newPosition;
+
+        editImagePreview.style.objectPosition =
+            newPosition;
+
+        startX = event.clientX;
+        startY = event.clientY;
+
+    });
+
+
+    document.addEventListener("mouseup", function () {
+
+        if (isDragging) {
+
+            isDragging = false;
+
+            editImagePreview.style.cursor = "grab";
+
+        }
+
+    });
+
+
+    // -------------------------
+    // Reset
+    // -------------------------
+
+    if (resetImage) {
+
+        resetImage.addEventListener("click", function () {
+
+            imagePosition.value = "50% 50%";
+
+            imageZoom.value = "1";
+
+            zoomSlider.value = "1";
+
+            applyImageSettings();
+
+        });
+
+    }
+
+}
+
+</script>
+
+</html>
